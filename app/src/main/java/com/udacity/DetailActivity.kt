@@ -20,12 +20,15 @@ class DetailActivity : AppCompatActivity() {
         ) as NotificationManager
         notificationManager.cancel(0)
 
+        // GET VARIABLES
         val status = intent.getStringExtra("status")
         val url = intent.getStringExtra("name")
 
+        // UPDATE TEXT OF TEXTVIEWS
         textViewFileName.setText(url)
         textViewStatusFileName.setText(status)
 
+        // FINISH ACTIVITY
         buttonOk.setOnClickListener {
             finish()
         }

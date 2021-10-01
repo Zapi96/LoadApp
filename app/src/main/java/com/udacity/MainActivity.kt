@@ -23,6 +23,17 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val URL_glide =
+            "https://github.com/bumptech/glide/archive/refs/heads/master.zip"
+        private const val URL_retrofit =
+            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/refs/heads/master.zip"
+        private const val URL_loadApp =
+            "https://github.com/square/retrofit/archive/refs/heads/master.zip"
+        private const val CHANNEL_ID = "channelId"
+    }
+
+    // INITIALIZE
     private var downloadID: Long = 0
 
     private lateinit var notificationManager: NotificationManager
@@ -42,10 +53,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+        // INITIALIZE BUTTONS
         glideButton = findViewById(R.id.glideButton)
         retrofitButton = findViewById(R.id.retrofitButton)
         loadAppButton = findViewById(R.id.loadappButton)
 
+        // ACTIONS TO PERFORM AFTER CLICK ON BUTTONS
         glideButton.setOnClickListener {
             url = URL_glide
             name = glideButton.text.toString()
@@ -62,21 +75,21 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
+        // DETECT WHEN DATA IS DOWNLOADED
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        // LAUNCH DOWNLOAD WHEN BUTON IS CLICKED
         custom_button.setOnClickListener {
             Log.d("SUCCESS","Button")
             download(url)
-
         }
 
     }
 
+    // SEE STATUS AND LAUNCH NOTIFICATION
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-
 
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             var status: Int? = null
@@ -100,12 +113,11 @@ class MainActivity : AppCompatActivity() {
                     custom_button.buttonState = ButtonState.Completed
                     notificationManager.sendNotification("Not Downloaded", context,CHANNEL_ID,"Fail",name)
                 }
-
             }
-
         }
     }
 
+    // DOWNLOAD
     private fun download(url:String?) {
         if (url!=null) {
             custom_button.buttonState = ButtonState.Loading
@@ -131,15 +143,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    companion object {
-        private const val URL_glide =
-            "https://github.com/bumptech/glide/archive/refs/heads/master.zip"
-        private const val URL_retrofit =
-            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/refs/heads/master.zip"
-        private const val URL_loadApp =
-            "https://github.com/square/retrofit/archive/refs/heads/master.zip"
-        private const val CHANNEL_ID = "channelId"
-    }
+    // CANCEL RESGISTER OF DOWNLOAD
 
     override fun onDestroy() {
         super.onDestroy()

@@ -20,13 +20,25 @@ class LoadingButton @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
 
+    // INITIALIZE VARIABLES
     private var widthSize = 0
     private var heightSize = 0
     private var animatedWidth : Float = 0.0f
 
+    private var buttonNormalColor = 0
+    private var buttonLoadingColor = 0
+    private var textColor = 0
 
     private val valueAnimator = ValueAnimator()
 
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textAlign = Paint.Align.CENTER
+        textSize = 55.0f
+        typeface = Typeface.create( "", Typeface.BOLD)
+    }
+
+    // OBSERVE BUTTON BEHAVIOUR
     var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
         if (new == ButtonState.Loading){
             Log.d("SUCCESS","Observer")
@@ -38,21 +50,9 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        textAlign = Paint.Align.CENTER
-        textSize = 55.0f
-        typeface = Typeface.create( "", Typeface.BOLD)
-    }
-
-    private var buttonNormalColor = 0
-    private var buttonLoadingColor = 0
-    private var textColor = 0
-
-
 
     init {
-
+        // EXTRACT VALUES OF COLORS
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
             buttonNormalColor = getColor(R.styleable.LoadingButton_buttonColor1, 0)
             buttonLoadingColor = getColor(R.styleable.LoadingButton_buttonColor2, 0)
@@ -62,7 +62,7 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
-
+    // DRAW
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -73,8 +73,6 @@ class LoadingButton @JvmOverloads constructor(
         val y = height/4f
         val diameter = height/2f
         var oval = RectF()
-
-
 
         if (buttonState == ButtonState.Completed){
             paint.color = buttonNormalColor
@@ -97,20 +95,8 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
-        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
-        val h: Int = resolveSizeAndState(
-            MeasureSpec.getSize(w),
-            heightMeasureSpec,
-            0
-        )
-        widthSize = w
-        heightSize = h
-        setMeasuredDimension(w, h)
-    }
 
-    //ANIMATE_LOADING_BUTTON_BACKGROUND
+    // ANIMATE_LOADING_BUTTON_BACKGROUND
      fun animatedWidthButton() {
         valueAnimator.apply {
             setFloatValues(0f, width.toFloat())
@@ -123,6 +109,7 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator.start()
     }
 
+    // CANCEL ANIMATED BUTTON
     fun animatedWidthButtonCancel(){
         valueAnimator.cancel()
         invalidate()
