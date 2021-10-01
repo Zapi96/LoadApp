@@ -95,8 +95,20 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
+        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
+        val h: Int = resolveSizeAndState(
+            MeasureSpec.getSize(w),
+            heightMeasureSpec,
+            0
+        )
+        widthSize = w
+        heightSize = h
+        setMeasuredDimension(w, h)
+    }
 
-    // ANIMATE_LOADING_BUTTON_BACKGROUND
+    // START ANIMATED
      fun animatedWidthButton() {
         valueAnimator.apply {
             setFloatValues(0f, width.toFloat())
@@ -109,7 +121,7 @@ class LoadingButton @JvmOverloads constructor(
         valueAnimator.start()
     }
 
-    // CANCEL ANIMATED BUTTON
+    // END ANIMATED
     fun animatedWidthButtonCancel(){
         valueAnimator.cancel()
         invalidate()
